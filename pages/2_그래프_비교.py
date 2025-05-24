@@ -6,12 +6,12 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
+from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
 
 st.title("📊 두 개 그래프 비교 시각화")
 
 # 다크모드 토글 및 스타일 추가
-add_dark_mode_toggle()
+apply_custom_theme()
 style_metric_cards()
 
 uploaded_file = st.file_uploader("CSV 파일 업로드", type=["csv"])

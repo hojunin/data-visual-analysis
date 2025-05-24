@@ -8,12 +8,12 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
+from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
 
 st.title("🔄 그래프 겹쳐보기")
 
 # 다크모드 토글 및 스타일 추가
-add_dark_mode_toggle()
+apply_custom_theme()
 style_metric_cards()
 st.markdown("두 개의 그래프를 겹쳐서 비교 분석할 수 있습니다.")
 

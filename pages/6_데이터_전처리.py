@@ -11,12 +11,12 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
+from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
 
 st.title("🛠️ 데이터 전처리")
 
 # 다크모드 토글 및 스타일 추가
-add_dark_mode_toggle()
+apply_custom_theme()
 style_metric_cards()
 st.markdown("데이터 품질을 개선하고 분석에 적합하게 변환하는 다양한 전처리 기능을 제공합니다.")
 

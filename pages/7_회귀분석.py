@@ -14,12 +14,12 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
+from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
 
 st.title("📈 회귀분석 전문 도구")
 
 # 다크모드 토글 및 스타일 추가
-add_dark_mode_toggle()
+apply_custom_theme()
 style_metric_cards()
 st.markdown("다양한 회귀분석 모델을 비교하고 성능을 평가할 수 있는 전문 도구입니다.")
 
