@@ -9,12 +9,11 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
+from utils import add_chart_export_section, style_metric_cards
 
 st.title("📊 통합 대시보드")
 
-# 다크모드 토글 및 스타일 추가
-apply_custom_theme()
+# 메트릭 카드 스타일 적용
 style_metric_cards()
 st.markdown("데이터의 전반적인 인사이트를 한 눈에 확인할 수 있는 대시보드입니다.")
 

@@ -16,7 +16,7 @@ warnings.filterwarnings('ignore')
 
 import sys
 sys.path.append('..')
-from utils import apply_custom_theme, add_chart_export_section
+from utils import add_chart_export_section
 
 def find_optimal_clusters(X, max_k=10, method='kmeans'):
     """최적의 클러스터 수를 찾기 위한 분석"""
@@ -85,8 +85,6 @@ def plot_cluster_results(X_reduced, labels, title, feature_names=None, method_na
     return fig
 
 def main():
-    apply_custom_theme()
-    
     st.title("🧩 클러스터링 분석")
     st.markdown("데이터의 숨겨진 패턴을 발견하고 유사한 데이터 포인트들을 그룹화해보세요.")
     
@@ -169,7 +167,8 @@ def main():
     n_components = st.sidebar.slider(
         "축소할 차원 수",
         2, min(10, len(selected_features)),
-        2 if dim_reduction != "없음" else len(selected_features)
+        2 if dim_reduction != "없음" else len(selected_features),
+        key="clustering_n_components"
     )
     
     # 차원 축소 수행
@@ -177,7 +176,7 @@ def main():
         X_reduced, explained_var, cumulative_var, pca_model = perform_pca_analysis(X_scaled, n_components)
         reduction_method_name = "PCA"
     elif dim_reduction == "t-SNE":
-        perplexity = st.sidebar.slider("t-SNE Perplexity", 5, 50, 30)
+        perplexity = st.sidebar.slider("t-SNE Perplexity", 5, 50, 30, key="clustering_perplexity")
         X_reduced, sample_idx = perform_tsne_analysis(X_scaled, n_components, perplexity)
         reduction_method_name = "t-SNE"
         # t-SNE의 경우 원본 데이터도 샘플링된 것을 사용
@@ -249,7 +248,7 @@ def main():
         
         # 최적 클러스터 수 찾기
         if st.checkbox("최적 클러스터 수 분석"):
-            max_k = st.slider("최대 클러스터 수", 3, 15, 10)
+            max_k = st.slider("최대 클러스터 수", 3, 15, 10, key="clustering_max_k")
             
             with st.spinner("최적 클러스터 수를 분석 중..."):
                 k_range, inertias, silhouette_scores = find_optimal_clusters(X_reduced, max_k, 'kmeans')
@@ -287,7 +286,7 @@ def main():
                 st.info(f"실루엣 점수 기준 추천 클러스터 수: {best_k_silhouette}")
         
         # K-Means 파라미터
-        n_clusters = st.slider("클러스터 수", 2, 10, 3)
+        n_clusters = st.slider("클러스터 수", 2, 10, 3, key="kmeans_n_clusters")
         random_state = st.number_input("랜덤 시드", 0, 1000, 42)
         
         # K-Means 실행
@@ -310,8 +309,8 @@ def main():
         st.subheader("DBSCAN 클러스터링")
         
         # DBSCAN 파라미터
-        eps = st.slider("Epsilon (eps)", 0.1, 2.0, 0.5, 0.1)
-        min_samples = st.slider("최소 샘플 수", 2, 20, 5)
+        eps = st.slider("Epsilon (eps)", 0.1, 2.0, 0.5, 0.1, key="dbscan_eps")
+        min_samples = st.slider("최소 샘플 수", 2, 20, 5, key="dbscan_min_samples")
         
         # DBSCAN 실행
         dbscan = DBSCAN(eps=eps, min_samples=min_samples)
@@ -342,7 +341,7 @@ def main():
         st.subheader("Gaussian Mixture 모델")
         
         # GMM 파라미터
-        n_components_gmm = st.slider("컴포넌트 수", 2, 10, 3)
+        n_components_gmm = st.slider("컴포넌트 수", 2, 10, 3, key="gmm_n_components")
         covariance_type = st.selectbox("공분산 타입", ["full", "tied", "diag", "spherical"])
         
         # GMM 실행
@@ -368,7 +367,7 @@ def main():
         st.subheader("계층적 클러스터링")
         
         # 계층적 클러스터링 파라미터
-        n_clusters_agg = st.slider("클러스터 수", 2, 10, 3)
+        n_clusters_agg = st.slider("클러스터 수", 2, 10, 3, key="agg_n_clusters")
         linkage = st.selectbox("연결 방법", ["ward", "complete", "average", "single"])
         
         # 계층적 클러스터링 실행

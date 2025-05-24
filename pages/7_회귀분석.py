@@ -14,12 +14,11 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
+from utils import add_chart_export_section, style_metric_cards
 
 st.title("📈 회귀분석 전문 도구")
 
-# 다크모드 토글 및 스타일 추가
-apply_custom_theme()
+# 메트릭 카드 스타일 적용
 style_metric_cards()
 st.markdown("다양한 회귀분석 모델을 비교하고 성능을 평가할 수 있는 전문 도구입니다.")
 
@@ -61,7 +60,7 @@ if uploaded_file:
             y_clean = y.loc[common_idx]
             
             # 훈련/테스트 분할
-            test_size = st.slider("테스트 데이터 비율", 0.1, 0.5, 0.2, 0.05)
+            test_size = st.slider("테스트 데이터 비율", 0.1, 0.5, 0.2, 0.05, key="simple_regression_test_size")
             X_train, X_test, y_train, y_test = train_test_split(
                 X_clean, y_clean, test_size=test_size, random_state=42
             )
@@ -292,7 +291,7 @@ if uploaded_file:
             st.markdown("비선형 관계를 모델링하기 위한 다항 회귀분석입니다.")
             
             feature_var = st.selectbox("독립변수 (X)", available_features, key="poly_feature")
-            degree = st.slider("다항식 차수", 1, 5, 2)
+            degree = st.slider("다항식 차수", 1, 5, 2, key="polynomial_degree")
             
             # 데이터 준비
             X = df[[feature_var]].dropna()
@@ -441,7 +440,7 @@ if uploaded_file:
                 )
                 
                 # 정규화 파라미터
-                alpha = st.slider("정규화 강도 (alpha)", 0.01, 10.0, 1.0, 0.01)
+                alpha = st.slider("정규화 강도 (alpha)", 0.01, 10.0, 1.0, 0.01, key="regularization_alpha")
                 
                 # 모델들 학습
                 models = {

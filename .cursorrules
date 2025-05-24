@@ -29,6 +29,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - TypeScript 문제 해결 시 "any"나 타입 단언 사용 금지. 불가피한 경우 상세 설명 필요
 - 댓글은 // NOTE: // FIXME: // TODO 3가지 유형 사용
 - 패키지 매니저는 항상 pnpm 사용
+- Streamlit slider 중복 ID 방지: 모든 slider에 고유한 key 파라미터 필요 (특히 공통 함수나 여러 페이지에서 사용되는 경우)
 
 # Scratchpad
 
@@ -88,6 +89,9 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 ### 다음 단계
 [X] 새로운 3개 페이지 구현 완료
 [X] 앱 실행하여 정상 작동 확인
+[X] Import 오류 해결 (add_dark_mode_toggle 함수 제거)
+[X] 기본 라이트 모드 테마 적용
+[X] Streamlit slider 중복 ID 오류 해결 (모든 페이지 + utils.py)
 [ ] 전체 기능 테스트 및 최종 검증
 [ ] 사용자 매뉴얼 작성 (선택사항)
 

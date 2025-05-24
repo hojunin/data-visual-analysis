@@ -21,7 +21,7 @@ except ImportError:
 
 import sys
 sys.path.append('..')
-from utils import apply_custom_theme, add_chart_export_section
+from utils import add_chart_export_section
 
 def create_sample_timeseries():
     """샘플 시계열 데이터 생성"""
@@ -137,8 +137,6 @@ def plot_acf_pacf(series, lags=40):
     return fig
 
 def main():
-    apply_custom_theme()
-    
     st.title("📈 시계열 분석")
     st.markdown("시간에 따른 데이터의 패턴과 트렌드를 분석해보세요.")
     
@@ -390,7 +388,7 @@ def main():
     # ACF/PACF 분석
     st.header("📊 자기상관 분석")
     
-    acf_lags = st.slider("ACF/PACF 지연(lag) 수", 10, min(100, len(ts_data)//4), 40)
+    acf_lags = st.slider("ACF/PACF 지연(lag) 수", 10, min(100, len(ts_data)//4), 40, key="timeseries_acf_lags")
     
     # ACF/PACF 사용할 데이터 선택
     if diff_order > 0:

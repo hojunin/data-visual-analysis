@@ -11,12 +11,11 @@ import os
 
 # utils.py 모듈 import를 위한 경로 추가
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils import apply_custom_theme, add_chart_export_section, style_metric_cards
+from utils import add_chart_export_section, style_metric_cards
 
 st.title("🛠️ 데이터 전처리")
 
-# 다크모드 토글 및 스타일 추가
-apply_custom_theme()
+# 메트릭 카드 스타일 적용
 style_metric_cards()
 st.markdown("데이터 품질을 개선하고 분석에 적합하게 변환하는 다양한 전처리 기능을 제공합니다.")
 
@@ -161,14 +160,14 @@ if uploaded_file:
                     
                 elif outlier_method == "Z-Score 방법":
                     z_scores = np.abs(stats.zscore(data))
-                    threshold = st.slider("Z-Score 임계값", 2.0, 4.0, 3.0, 0.1)
+                    threshold = st.slider("Z-Score 임계값", 2.0, 4.0, 3.0, 0.1, key="zscore_threshold")
                     outliers = data[z_scores > threshold]
                     
                 elif outlier_method == "수정된 Z-Score 방법":
                     median = data.median()
                     mad = np.median(np.abs(data - median))
                     modified_z_scores = 0.6745 * (data - median) / mad
-                    threshold = st.slider("수정된 Z-Score 임계값", 2.0, 4.0, 3.5, 0.1)
+                    threshold = st.slider("수정된 Z-Score 임계값", 2.0, 4.0, 3.5, 0.1, key="modified_zscore_threshold")
                     outliers = data[np.abs(modified_z_scores) > threshold]
                 
                 # 이상치 시각화
@@ -376,7 +375,8 @@ if uploaded_file:
                 f"{filter_col} 범위 선택",
                 min_value=col_min,
                 max_value=col_max,
-                value=(col_min, col_max)
+                value=(col_min, col_max),
+                key="data_filter_range"
             )
             
             if st.button("수치형 필터 적용"):

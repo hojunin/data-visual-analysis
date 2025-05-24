@@ -19,11 +19,9 @@ warnings.filterwarnings('ignore')
 
 import sys
 sys.path.append('..')
-from utils import apply_custom_theme, add_chart_export_section
+from utils import add_chart_export_section
 
 def main():
-    apply_custom_theme()
-    
     st.title("🤖 머신러닝 모델 평가")
     st.markdown("다양한 머신러닝 모델의 성능을 평가하고 비교해보세요.")
     
@@ -106,7 +104,7 @@ def main():
             y = le.fit_transform(y)
     
     # 데이터 분할
-    test_size = st.sidebar.slider("테스트 데이터 비율", 0.1, 0.5, 0.2, 0.05)
+    test_size = st.sidebar.slider("테스트 데이터 비율", 0.1, 0.5, 0.2, 0.05, key="ml_test_size")
     random_state = st.sidebar.number_input("랜덤 시드", 0, 1000, 42)
     
     X_train, X_test, y_train, y_test = train_test_split(

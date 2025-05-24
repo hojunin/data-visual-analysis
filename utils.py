@@ -262,11 +262,11 @@ def add_chart_export_section(fig, chart_name="chart"):
     with st.expander("⚙️ 이미지 설정"):
         col1, col2 = st.columns(2)
         with col1:
-            width = st.slider("이미지 너비", 600, 2000, 1200, 100)
+            width = st.slider("이미지 너비", 600, 2000, 1200, 100, key=f"width_{chart_name}_{id(fig)}")
         with col2:
-            height = st.slider("이미지 높이", 400, 1500, 800, 100)
+            height = st.slider("이미지 높이", 400, 1500, 800, 100, key=f"height_{chart_name}_{id(fig)}")
         
-        dpi = st.slider("해상도 (DPI)", 72, 300, 150, 10)
+        dpi = st.slider("해상도 (DPI)", 72, 300, 150, 10, key=f"dpi_{chart_name}_{id(fig)}")
         
         if st.button(f"🎨 고해상도 PNG 생성", key=f"custom_png_{chart_name}_{id(fig)}"):
             try:
