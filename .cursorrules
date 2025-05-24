@@ -1,0 +1,104 @@
+# Instructions
+
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again. 
+
+You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
+
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
+
+# Lessons
+
+## User Specified Lessons
+
+- You have a python venv in ./venv. Use it.
+- Include info useful for debugging in the program output.
+- Read the file before you try to edit it.
+- Due to Cursor's limit, when you use `git` and `gh` and need to submit a multiline commit message, first write the message in a file, and then use `git commit -F <filename>` or similar command to commit. And then remove the file. Include "[Cursor] " in the commit message and PR title.
+
+## Cursor learned
+
+- For search results, ensure proper handling of different character encodings (UTF-8) for international queries
+- Add debug information to stderr while keeping the main output clean in stdout for better pipeline integration
+- When using seaborn styles in matplotlib, use 'seaborn-v0_8' instead of 'seaborn' as the style name due to recent seaborn version changes
+- Use 'gpt-4o' as the model name for OpenAI's GPT-4 with vision capabilities
+- 항상 한국어로 응답
+- TypeScript 문제 해결 시 "any"나 타입 단언 사용 금지. 불가피한 경우 상세 설명 필요
+- 댓글은 // NOTE: // FIXME: // TODO 3가지 유형 사용
+- 패키지 매니저는 항상 pnpm 사용
+
+# Scratchpad
+
+## 현재 작업: 데이터 시각화 그래프 프로젝트 기능 확장
+
+### 작업 설명
+전체 프로젝트를 살펴보고 추가적인 기능을 만들어내는 것. 특히 두 그래프를 겹쳐서 보는 기능을 포함한 다양한 기능들을 제안하고 구현할 예정.
+
+### 계획된 작업
+[ ] 현재 프로젝트 구조 및 기능 파악
+[ ] 기존 코드 분석
+[ ] 추가 기능 아이디어 도출
+[ ] 두 그래프 겹쳐보기 기능 구현
+[ ] 기타 유용한 기능들 구현
+
+### 진행 상황
+[X] .cursorrules 파일 생성 및 작업 계획 수립
+[X] 프로젝트 구조 파악 완료
+
+### 현재 프로젝트 분석 결과
+- Streamlit 기반 데이터 시각화 웹앱
+- 2개 페이지: Basic Analysis, Multiple Compare
+- 라이브러리: streamlit, pandas, plotly
+- 테스트 데이터: 학생 성적 데이터
+
+### 추가 기능 아이디어
+1. 두 그래프 겹쳐보기 (overlay) 기능
+2. 데이터 필터링 및 조건부 시각화
+3. 통계 분석 및 상관관계 분석
+4. 대시보드 모드 (여러 차트 한 번에)
+5. 데이터 요약 통계 및 인사이트 제공
+6. 차트 스타일 커스터마이징
+7. 데이터 전처리 기능
+8. 시계열 분석 (날짜 데이터가 있는 경우)
+
+### 다음 단계
+[X] 두 그래프 겹쳐보기 기능 구현
+[X] 고급 분석 페이지 추가
+[X] 대시보드 페이지 추가
+[X] 데이터 전처리 페이지 추가
+
+### 구현 완료된 기능들
+1. **Graph Overlay (3_Graph_Overlay.py)**
+   - 두 그래프 겹쳐보기 기능
+   - 투명도 조절
+   - 이중 Y축 지원
+   - 실시간 상관관계 분석
+
+2. **Advanced Analysis (4_Advanced_Analysis.py)**
+   - 기술통계 분석
+   - 상관관계 매트릭스
+   - 회귀분석 (R², 잔차 분석)
+   - 분포 분석 및 정규성 검정
+   - 그룹별 분석 (ANOVA, t-test)
+
+3. **Dashboard (5_Dashboard.py)**
+   - 자동 대시보드 생성
+   - 커스텀 대시보드
+   - 인사이트 자동 생성
+   - 인터랙티브 차트 조합
+
+4. **Data Preprocessing (6_Data_Preprocessing.py)**
+   - 결측치 처리 (다양한 방법)
+   - 이상치 탐지 및 처리
+   - 데이터 변환 (스케일링, 인코딩)
+   - 피처 엔지니어링
+   - 데이터 필터링
+
+### 추가 개선 아이디어
+[ ] 머신러닝 모델 성능 평가 페이지
+[ ] 시계열 분석 기능
+[ ] 클러스터링 분석
+[ ] 자동 보고서 생성 
