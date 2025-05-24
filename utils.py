@@ -4,6 +4,8 @@ import plotly.io as pio
 import io
 import base64
 from datetime import datetime
+import time
+import random
 
 def apply_custom_theme():
     """깔끔한 하얀색/회색 테마를 적용합니다."""
@@ -179,10 +181,13 @@ def add_download_button(fig, filename_prefix="chart"):
     fig: Plotly figure object
     filename_prefix: 파일명 접두사
     """
+    # 고유한 식별자 생성 (timestamp + random number)
+    unique_id = f"{int(time.time() * 1000)}_{random.randint(1000, 9999)}"
+    
     col1, col2, col3 = st.columns([1, 1, 1])
     
     with col1:
-        if st.button("📸 PNG로 저장", key=f"png_{filename_prefix}_{id(fig)}"):
+        if st.button("📸 PNG로 저장", key=f"png_{filename_prefix}_{unique_id}"):
             try:
                 # PNG로 저장
                 img_bytes = pio.to_image(fig, format="png", width=1200, height=800, scale=2)
@@ -195,7 +200,7 @@ def add_download_button(fig, filename_prefix="chart"):
                     data=img_bytes,
                     file_name=filename,
                     mime="image/png",
-                    key=f"download_png_{filename_prefix}_{id(fig)}"
+                    key=f"download_png_{filename_prefix}_{unique_id}"
                 )
                 st.success("PNG 이미지가 준비되었습니다!")
                 
@@ -203,7 +208,7 @@ def add_download_button(fig, filename_prefix="chart"):
                 st.error(f"이미지 생성 중 오류가 발생했습니다: {str(e)}")
     
     with col2:
-        if st.button("🖼️ SVG로 저장", key=f"svg_{filename_prefix}_{id(fig)}"):
+        if st.button("🖼️ SVG로 저장", key=f"svg_{filename_prefix}_{unique_id}"):
             try:
                 # SVG로 저장
                 img_svg = pio.to_image(fig, format="svg", width=1200, height=800)
@@ -216,7 +221,7 @@ def add_download_button(fig, filename_prefix="chart"):
                     data=img_svg,
                     file_name=filename,
                     mime="image/svg+xml",
-                    key=f"download_svg_{filename_prefix}_{id(fig)}"
+                    key=f"download_svg_{filename_prefix}_{unique_id}"
                 )
                 st.success("SVG 이미지가 준비되었습니다!")
                 
@@ -224,7 +229,7 @@ def add_download_button(fig, filename_prefix="chart"):
                 st.error(f"이미지 생성 중 오류가 발생했습니다: {str(e)}")
     
     with col3:
-        if st.button("📄 HTML로 저장", key=f"html_{filename_prefix}_{id(fig)}"):
+        if st.button("📄 HTML로 저장", key=f"html_{filename_prefix}_{unique_id}"):
             try:
                 # HTML로 저장
                 html_str = pio.to_html(fig, include_plotlyjs='cdn')
@@ -237,7 +242,7 @@ def add_download_button(fig, filename_prefix="chart"):
                     data=html_str.encode('utf-8'),
                     file_name=filename,
                     mime="text/html",
-                    key=f"download_html_{filename_prefix}_{id(fig)}"
+                    key=f"download_html_{filename_prefix}_{unique_id}"
                 )
                 st.success("인터랙티브 HTML이 준비되었습니다!")
                 
@@ -252,6 +257,9 @@ def add_chart_export_section(fig, chart_name="chart"):
     fig: Plotly figure object
     chart_name: 차트 이름
     """
+    # 고유한 식별자 생성 (timestamp + random number)
+    unique_id = f"{int(time.time() * 1000)}_{random.randint(1000, 9999)}"
+    
     st.markdown("---")
     st.markdown("### 📥 차트 내보내기")
     st.markdown("차트를 다양한 형식으로 저장할 수 있습니다.")
@@ -262,13 +270,13 @@ def add_chart_export_section(fig, chart_name="chart"):
     with st.expander("⚙️ 이미지 설정"):
         col1, col2 = st.columns(2)
         with col1:
-            width = st.slider("이미지 너비", 600, 2000, 1200, 100, key=f"width_{chart_name}_{id(fig)}")
+            width = st.slider("이미지 너비", 600, 2000, 1200, 100, key=f"width_{chart_name}_{unique_id}")
         with col2:
-            height = st.slider("이미지 높이", 400, 1500, 800, 100, key=f"height_{chart_name}_{id(fig)}")
+            height = st.slider("이미지 높이", 400, 1500, 800, 100, key=f"height_{chart_name}_{unique_id}")
         
-        dpi = st.slider("해상도 (DPI)", 72, 300, 150, 10, key=f"dpi_{chart_name}_{id(fig)}")
+        dpi = st.slider("해상도 (DPI)", 72, 300, 150, 10, key=f"dpi_{chart_name}_{unique_id}")
         
-        if st.button(f"🎨 고해상도 PNG 생성", key=f"custom_png_{chart_name}_{id(fig)}"):
+        if st.button(f"🎨 고해상도 PNG 생성", key=f"custom_png_{chart_name}_{unique_id}"):
             try:
                 img_bytes = pio.to_image(
                     fig, 
@@ -286,7 +294,7 @@ def add_chart_export_section(fig, chart_name="chart"):
                     data=img_bytes,
                     file_name=filename,
                     mime="image/png",
-                    key=f"download_custom_png_{chart_name}_{id(fig)}"
+                    key=f"download_custom_png_{chart_name}_{unique_id}"
                 )
                 st.success(f"고해상도 이미지가 준비되었습니다! ({width}x{height}, {dpi}DPI)")
                 
