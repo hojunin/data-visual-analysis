@@ -84,6 +84,49 @@ def plot_cluster_results(X_reduced, labels, title, feature_names=None, method_na
     fig.update_layout(height=600)
     return fig
 
+def create_sample_clustering_data():
+    """클러스터링 분석용 샘플 데이터 생성"""
+    np.random.seed(42)
+    
+    # 3개의 클러스터를 가진 데이터 생성
+    n_samples = 300
+    
+    # 클러스터 1: (2, 2) 중심
+    cluster1 = np.random.multivariate_normal([2, 2], [[0.5, 0], [0, 0.5]], n_samples//3)
+    
+    # 클러스터 2: (6, 6) 중심
+    cluster2 = np.random.multivariate_normal([6, 6], [[0.8, 0.2], [0.2, 0.8]], n_samples//3)
+    
+    # 클러스터 3: (2, 6) 중심
+    cluster3 = np.random.multivariate_normal([2, 6], [[0.6, -0.1], [-0.1, 0.6]], n_samples//3)
+    
+    # 데이터 결합
+    X = np.vstack([cluster1, cluster2, cluster3])
+    
+    # 추가 피처들 생성
+    feature3 = X[:, 0] + X[:, 1] + np.random.normal(0, 0.5, len(X))
+    feature4 = X[:, 0] * X[:, 1] + np.random.normal(0, 1, len(X))
+    feature5 = np.random.normal(10, 2, len(X))
+    
+    # DataFrame 생성
+    df = pd.DataFrame({
+        '키': X[:, 0] * 30 + 150,  # 키 (cm)
+        '몸무게': X[:, 1] * 15 + 50,  # 몸무게 (kg)
+        '연령': feature3 * 10 + 25,  # 연령
+        '소득': feature4 * 1000 + 35000,  # 소득
+        '점수': feature5 * 10 + 70,  # 점수
+        '카테고리': np.random.choice(['A', 'B', 'C'], len(X))  # 범주형 변수
+    })
+    
+    # 이상치 제거 및 정규화
+    df['키'] = np.clip(df['키'], 150, 200)
+    df['몸무게'] = np.clip(df['몸무게'], 40, 120)
+    df['연령'] = np.clip(df['연령'], 18, 70)
+    df['소득'] = np.clip(df['소득'], 20000, 80000)
+    df['점수'] = np.clip(df['점수'], 0, 100)
+    
+    return df
+
 def main():
     st.title("🧩 클러스터링 분석")
     st.markdown("데이터의 숨겨진 패턴을 발견하고 유사한 데이터 포인트들을 그룹화해보세요.")
@@ -93,17 +136,28 @@ def main():
     uploaded_file = st.sidebar.file_uploader("CSV 파일을 업로드하세요", type=['csv'])
     
     if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
+        try:
+            df = pd.read_csv(uploaded_file)
+            st.success(f"✅ 파일이 성공적으로 업로드되었습니다: {uploaded_file.name}")
+            st.write(f"**데이터 형태**: {df.shape[0]}행 × {df.shape[1]}열")
+        except Exception as e:
+            st.error(f"파일 읽기 중 오류가 발생했습니다: {str(e)}")
+            st.info("📊 샘플 데이터를 사용합니다.")
+            df = create_sample_clustering_data()
     else:
         # 기본 테스트 데이터 사용
-        st.info("샘플 데이터를 사용합니다. CSV 파일을 업로드하여 자신의 데이터를 분석해보세요.")
-        df = pd.read_csv('test.csv')
+        st.info("📊 샘플 데이터를 사용합니다. CSV 파일을 업로드하여 자신의 데이터를 분석해보세요.")
+        df = create_sample_clustering_data()
     
     st.sidebar.markdown("---")
     
     # 데이터 미리보기
-    if st.sidebar.checkbox("데이터 미리보기"):
-        st.subheader("📊 데이터 미리보기")
+    if st.sidebar.checkbox("데이터 미리보기", value=True):
+        if uploaded_file is not None:
+            st.subheader(f"📊 업로드된 데이터 미리보기: {uploaded_file.name}")
+        else:
+            st.subheader("📊 샘플 데이터 미리보기")
+        
         st.dataframe(df.head())
         
         col1, col2, col3 = st.columns(3)
@@ -113,6 +167,16 @@ def main():
             st.metric("열 수", len(df.columns))
         with col3:
             st.metric("결측값", df.isnull().sum().sum())
+        
+        # 컬럼 정보 표시
+        st.write("**컬럼 정보:**")
+        col_info = pd.DataFrame({
+            '컬럼명': df.columns,
+            '데이터 타입': df.dtypes,
+            '결측값 수': df.isnull().sum(),
+            '유니크 값 수': df.nunique()
+        })
+        st.dataframe(col_info)
     
     # 클러스터링 설정
     st.sidebar.header("🎯 클러스터링 설정")

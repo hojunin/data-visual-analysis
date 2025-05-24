@@ -21,6 +21,60 @@ import sys
 sys.path.append('..')
 from utils import add_chart_export_section
 
+def create_sample_ml_data():
+    """머신러닝 모델 평가용 샘플 데이터 생성"""
+    np.random.seed(42)
+    
+    n_samples = 1000
+    
+    # 기본 피처들 생성
+    age = np.random.normal(35, 10, n_samples)
+    income = np.random.normal(50000, 15000, n_samples) + age * 500
+    education = np.random.choice([12, 14, 16, 18, 20], n_samples, p=[0.2, 0.3, 0.3, 0.15, 0.05])
+    experience = np.maximum(0, age - education - 6 + np.random.normal(0, 2, n_samples))
+    
+    # 상관관계가 있는 피처들
+    credit_score = 300 + income * 0.01 + education * 20 + np.random.normal(0, 50, n_samples)
+    debt_ratio = np.maximum(0, np.minimum(1, 0.3 - income/200000 + np.random.normal(0, 0.1, n_samples)))
+    
+    # 타겟 변수들 (회귀용과 분류용)
+    # 회귀용: 연봉 예측
+    salary = (
+        20000 + 
+        income * 0.5 + 
+        education * 1500 + 
+        experience * 800 + 
+        credit_score * 10 +
+        np.random.normal(0, 5000, n_samples)
+    )
+    
+    # 분류용: 대출 승인 여부
+    loan_approval_prob = (
+        -5 + 
+        income/10000 + 
+        education/4 + 
+        credit_score/200 - 
+        debt_ratio * 10 +
+        np.random.normal(0, 1, n_samples)
+    )
+    loan_approved = (loan_approval_prob > 0).astype(int)
+    
+    # DataFrame 생성
+    df = pd.DataFrame({
+        '나이': np.clip(age, 18, 70).round().astype(int),
+        '연간소득': np.clip(income, 20000, 200000).round().astype(int),
+        '교육년수': education,
+        '경력년수': np.clip(experience, 0, 40).round().astype(int),
+        '신용점수': np.clip(credit_score, 300, 850).round().astype(int),
+        '부채비율': np.clip(debt_ratio, 0, 1).round(3),
+        '예상연봉': np.clip(salary, 25000, 300000).round().astype(int),
+        '대출승인': loan_approved,
+        '점수': np.random.normal(75, 15, n_samples).round(1),
+        '등급': np.random.choice(['A', 'B', 'C', 'D'], n_samples, p=[0.25, 0.35, 0.3, 0.1])
+    })
+    
+    return df
+
 def main():
     st.title("🤖 머신러닝 모델 평가")
     st.markdown("다양한 머신러닝 모델의 성능을 평가하고 비교해보세요.")
@@ -30,17 +84,28 @@ def main():
     uploaded_file = st.sidebar.file_uploader("CSV 파일을 업로드하세요", type=['csv'])
     
     if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
+        try:
+            df = pd.read_csv(uploaded_file)
+            st.success(f"✅ 파일이 성공적으로 업로드되었습니다: {uploaded_file.name}")
+            st.write(f"**데이터 형태**: {df.shape[0]}행 × {df.shape[1]}열")
+        except Exception as e:
+            st.error(f"파일 읽기 중 오류가 발생했습니다: {str(e)}")
+            st.info("📊 샘플 데이터를 사용합니다.")
+            df = create_sample_ml_data()
     else:
         # 기본 테스트 데이터 사용
-        st.info("샘플 데이터를 사용합니다. CSV 파일을 업로드하여 자신의 데이터를 분석해보세요.")
-        df = pd.read_csv('test.csv')
+        st.info("📊 샘플 데이터를 사용합니다. CSV 파일을 업로드하여 자신의 데이터를 분석해보세요.")
+        df = create_sample_ml_data()
     
     st.sidebar.markdown("---")
     
     # 데이터 미리보기
-    if st.sidebar.checkbox("데이터 미리보기"):
-        st.subheader("📊 데이터 미리보기")
+    if st.sidebar.checkbox("데이터 미리보기", value=True):
+        if uploaded_file is not None:
+            st.subheader(f"📊 업로드된 데이터 미리보기: {uploaded_file.name}")
+        else:
+            st.subheader("📊 샘플 데이터 미리보기")
+        
         st.dataframe(df.head())
         
         col1, col2, col3 = st.columns(3)
@@ -50,6 +115,16 @@ def main():
             st.metric("열 수", len(df.columns))
         with col3:
             st.metric("결측값", df.isnull().sum().sum())
+        
+        # 컬럼 정보 표시
+        st.write("**컬럼 정보:**")
+        col_info = pd.DataFrame({
+            '컬럼명': df.columns,
+            '데이터 타입': df.dtypes,
+            '결측값 수': df.isnull().sum(),
+            '유니크 값 수': df.nunique()
+        })
+        st.dataframe(col_info)
     
     # 모델링 설정
     st.sidebar.header("🎯 모델링 설정")
