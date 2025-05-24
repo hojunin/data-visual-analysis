@@ -8,8 +8,18 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+import sys
+import os
+
+# utils.py 모듈 import를 위한 경로 추가
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
 
 st.title("📈 고급 분석 기능")
+
+# 다크모드 토글 및 스타일 추가
+add_dark_mode_toggle()
+style_metric_cards()
 st.markdown("데이터의 통계적 특성과 패턴을 심층 분석합니다.")
 
 uploaded_file = st.file_uploader("CSV 파일 업로드", type=["csv"])
@@ -67,6 +77,13 @@ if uploaded_file:
                 with col2:
                     fig_box = px.box(df, y=selected_col, title=f"{selected_col} 박스플롯")
                     st.plotly_chart(fig_box, use_container_width=True)
+                
+                # 차트 내보내기 기능
+                col1_exp, col2_exp = st.columns(2)
+                with col1_exp:
+                    add_chart_export_section(fig_hist, f"histogram_{selected_col}")
+                with col2_exp:
+                    add_chart_export_section(fig_box, f"boxplot_{selected_col}")
 
     elif analysis_type == "상관관계 분석":
         st.markdown("### 🔗 상관관계 분석")
@@ -83,6 +100,9 @@ if uploaded_file:
                 aspect="auto"
             )
             st.plotly_chart(fig_corr, use_container_width=True)
+            
+            # 차트 내보내기 기능
+            add_chart_export_section(fig_corr, "correlation_matrix")
             
             # 상관관계 수치 표시
             st.write("**상관계수 매트릭스**")
@@ -161,6 +181,9 @@ if uploaded_file:
                 fig_reg.update_xaxes(title=x_var)
                 fig_reg.update_yaxes(title=y_var)
                 st.plotly_chart(fig_reg, use_container_width=True)
+                
+                # 차트 내보내기 기능
+                add_chart_export_section(fig_reg, f"regression_{x_var}_{y_var}")
                 
                 # 회귀 방정식
                 st.markdown(f"**회귀 방정식**: {y_var} = {model.coef_[0]:.3f} × {x_var} + {model.intercept_:.3f}")

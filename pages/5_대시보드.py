@@ -4,8 +4,18 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
+import sys
+import os
+
+# utils.py 모듈 import를 위한 경로 추가
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils import add_dark_mode_toggle, add_chart_export_section, style_metric_cards
 
 st.title("📊 통합 대시보드")
+
+# 다크모드 토글 및 스타일 추가
+add_dark_mode_toggle()
+style_metric_cards()
 st.markdown("데이터의 전반적인 인사이트를 한 눈에 확인할 수 있는 대시보드입니다.")
 
 uploaded_file = st.file_uploader("CSV 파일 업로드", type=["csv"])
